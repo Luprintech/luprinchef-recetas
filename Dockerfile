@@ -53,10 +53,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/package.json  ./package.json
 COPY --from=builder --chown=nextjs:nodejs /app/next.config.ts ./next.config.ts
 COPY --from=builder --chown=nextjs:nodejs /app/prisma        ./prisma
 
-# Copiamos el script de arranque y lo hacemos ejecutable (como root, antes de USER)
-COPY docker-entrypoint.sh ./
-RUN chmod +x docker-entrypoint.sh && chown nextjs:nodejs docker-entrypoint.sh
-
 # Creamos el directorio de datos (SQLite + caché Pexels) con permisos correctos
 RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
 
@@ -66,6 +62,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# El entrypoint corre las migraciones y luego ejecuta el CMD
-ENTRYPOINT ["./docker-entrypoint.sh"]
-CMD ["npm", "run", "start"]
+# Ejecuta migraciones de Prisma y arranca el servidor
+CMD ["sh", "-c", "node_modules/.bin/prisma migrate deploy && npm run start"]

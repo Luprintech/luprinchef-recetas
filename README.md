@@ -12,6 +12,15 @@
 
 **Luprinchef** (Chef de la Nevera) es una aplicación web inteligente diseñada para ayudarte a encontrar y crear recetas basadas en los ingredientes que ya tienes en casa. Ya sea escribiendo lo que tienes o escaneando el interior de tu nevera con la cámara de tu dispositivo, la app te sugerirá la comida perfecta, aprovechando al máximo tus alimentos y ayudando a evitar el desperdicio.
 
+##  Previews
+<p align="center">
+  <img src="docs/preview.png" alt="App preview" width="600">
+</p>
+
+<p align="center">
+  <img src="docs/preview2.png" alt="App preview" width="600">
+</p>
+
 ## ✨ Funcionalidades Principales
 
 - 🤖 **Generación de Recetas con IA**: Introduce tus ingredientes y deja que la Inteligencia Artificial de Google (Gemini) cree una receta estructurada y completamente personalizada.
