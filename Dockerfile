@@ -25,6 +25,10 @@ COPY . .
 # Deshabilitamos la telemetría de Next.js
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# Creamos el directorio de datos antes del build
+# (Next.js intenta conectar a SQLite al generar páginas estáticas)
+RUN mkdir -p /app/data
+
 # Compilamos el proyecto
 RUN npm run build
 
