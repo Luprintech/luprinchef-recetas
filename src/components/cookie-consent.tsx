@@ -74,7 +74,7 @@ export function CookieConsent() {
             )}
 
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="max-w-md">
+                <DialogContent className="w-[calc(100%-2rem)] max-w-md rounded-2xl">
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2 text-xl">
                             <span className="text-3xl">🍪</span> Política de Cookies

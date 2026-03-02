@@ -118,17 +118,19 @@ export default function FavoritesPage() {
     return (
         <div className="flex flex-col items-center min-h-screen p-4 md:p-8">
             <main className="w-full max-w-5xl">
-                 <header className="flex justify-between items-center w-full mb-8">
-                    <h1 className="text-3xl md:text-4xl font-bold font-headline flex items-center gap-3">
-                        <BookHeart className="w-10 h-10 text-primary" />
-                        Recetas Favoritas
-                    </h1>
-                    <nav className="flex items-center gap-2">
+                <header className="flex justify-between items-center w-full mb-8 gap-4">
+                    <div className="min-w-0">
+                        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gap-2.5 truncate">
+                            <BookHeart className="w-6 h-6 sm:w-7 sm:h-7 text-primary shrink-0" />
+                            <span className="truncate">Recetas Favoritas</span>
+                        </h1>
+                    </div>
+                    <nav className="flex items-center gap-1 shrink-0">
                         <AuthButton />
                         <Link href="/" passHref>
-                            <Button variant="ghost">
-                                <Home className="mr-2" />
-                                Inicio
+                            <Button variant="ghost" size="sm" className="gap-1.5 px-2 md:px-3">
+                                <Home className="h-4 w-4 shrink-0" />
+                                <span className="hidden sm:inline text-sm">Inicio</span>
                             </Button>
                         </Link>
                     </nav>

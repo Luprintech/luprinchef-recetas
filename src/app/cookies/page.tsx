@@ -6,7 +6,7 @@ export const metadata = { title: 'Política de Cookies — Cocina con Luprinchef
 
 export default function CookiesPage() {
     return (
-        <div className="max-w-3xl mx-auto px-4 py-10">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
             <Link href="/">
                 <Button variant="ghost" className="mb-6 -ml-2">
                     <ArrowLeft className="mr-2 h-4 w-4" /> Volver
@@ -30,13 +30,13 @@ export default function CookiesPage() {
                 <section>
                     <h2 className="text-lg font-semibold mb-3">Cookies que utilizamos</h2>
 
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-xs border-collapse">
+                    <div className="overflow-x-auto -mx-4 sm:mx-0">
+                        <table className="w-full text-xs border-collapse min-w-[500px] mx-4 sm:mx-0">
                             <thead>
                                 <tr className="bg-muted">
-                                    <th className="border p-2 text-left">Nombre</th>
-                                    <th className="border p-2 text-left">Tipo</th>
-                                    <th className="border p-2 text-left">Duración</th>
+                                    <th className="border p-2 text-left min-w-[140px]">Nombre</th>
+                                    <th className="border p-2 text-left min-w-[80px]">Tipo</th>
+                                    <th className="border p-2 text-left min-w-[80px]">Duración</th>
                                     <th className="border p-2 text-left">Finalidad</th>
                                 </tr>
                             </thead>

@@ -6,7 +6,7 @@ export const metadata = { title: 'Política de Privacidad — Cocina con Luprinc
 
 export default function PrivacidadPage() {
     return (
-        <div className="max-w-3xl mx-auto px-4 py-10">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
             <Link href="/">
                 <Button variant="ghost" className="mb-6 -ml-2">
                     <ArrowLeft className="mr-2 h-4 w-4" /> Volver

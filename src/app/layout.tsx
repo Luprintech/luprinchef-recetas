@@ -22,6 +22,13 @@ export default function RootLayout({
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
                 <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
+                <link rel="manifest" href="/manifest.json" />
+                <meta name="theme-color" content="#09090b" />
+                <meta name="mobile-web-app-capable" content="yes" />
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+                <meta name="apple-mobile-web-app-title" content="Luprinchef" />
+                <link rel="apple-touch-icon" href="/icons/icon-192.png" />
             </head>
             <body className="font-body antialiased">
                 <SessionProvider>
@@ -35,15 +42,15 @@ export default function RootLayout({
 
                         {/* Footer */}
                         <footer className="border-t mt-12 py-6 px-4">
-                            <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
+                            <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-muted-foreground text-center sm:text-left">
                                 <span>© {new Date().getFullYear()} Cocina con Luprinchef · Powered by Guadalupe Cano</span>
-                                <nav className="flex items-center gap-4">
+                                <nav className="flex items-center gap-3 sm:gap-4 flex-wrap justify-center">
                                     <Link href="/privacidad" className="hover:text-foreground transition-colors">
-                                        Política de Privacidad
+                                        Privacidad
                                     </Link>
-                                    <span>·</span>
+                                    <span aria-hidden>·</span>
                                     <Link href="/cookies" className="hover:text-foreground transition-colors">
-                                        Política de Cookies
+                                        Cookies
                                     </Link>
                                 </nav>
                             </div>
