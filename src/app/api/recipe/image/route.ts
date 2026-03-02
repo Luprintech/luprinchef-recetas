@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateImageForRecipe } from '@/ai/flows/generate-recipe-image';
+import { searchPhoto } from '@/services/pexels';
 
 export async function POST(request: NextRequest) {
     try {
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Se requiere imageHint.' }, { status: 400 });
         }
 
-        const imageUrl = await generateImageForRecipe(imageHint);
+        const imageUrl = await searchPhoto(imageHint);
         return NextResponse.json({ imageUrl });
     } catch (e) {
         const errorMessage = e instanceof Error ? e.message : 'Ha ocurrido un error desconocido.';

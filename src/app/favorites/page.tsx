@@ -7,7 +7,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Home, BookHeart, Search, FolderPlus, Trash2, MoreHorizontal, Folder as FolderIcon } from 'lucide-react';
+import { Home, BookHeart, Search, FolderPlus, Trash2, MoreHorizontal, Folder as FolderIcon, LogIn } from 'lucide-react';
+import { AuthButton } from '@/components/auth-button';
+import { useAuth } from '@/hooks/use-auth';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { FavoriteRecipeCard } from '@/components/favorite-recipe-card';
@@ -28,6 +30,7 @@ import { Separator } from '@/components/ui/separator';
 
 export default function FavoritesPage() {
     const { favorites, folders, recipeFolderMap, createFolder, deleteFolder, moveRecipeToFolder, removeFavorite } = useFavorites();
+    const { isAuthenticated, isLoading: isAuthLoading, signIn } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
     const [newFolderName, setNewFolderName] = useState('');
     const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
@@ -119,7 +122,8 @@ export default function FavoritesPage() {
                         <BookHeart className="w-10 h-10 text-primary" />
                         Recetas Favoritas
                     </h1>
-                    <nav>
+                    <nav className="flex items-center gap-2">
+                        <AuthButton />
                         <Link href="/" passHref>
                             <Button variant="ghost">
                                 <Home className="mr-2" />
@@ -128,6 +132,20 @@ export default function FavoritesPage() {
                         </Link>
                     </nav>
                 </header>
+
+                {!isAuthLoading && !isAuthenticated && (
+                    <div className="flex flex-col items-center justify-center text-center p-12 border-2 border-dashed rounded-lg mb-8">
+                        <BookHeart className="h-12 w-12 text-muted-foreground mb-4" />
+                        <h2 className="text-xl font-semibold mb-2">Inicia sesión para ver tus favoritos</h2>
+                        <p className="text-muted-foreground mb-6">
+                            Guarda tus recetas favoritas y accede a ellas desde cualquier dispositivo.
+                        </p>
+                        <Button onClick={signIn}>
+                            <LogIn className="mr-2 h-4 w-4" />
+                            Continuar con Google
+                        </Button>
+                    </div>
+                )}
 
                 {favorites.length > 0 && (
                     <div className="flex flex-col sm:flex-row gap-4 mb-8">

@@ -20,6 +20,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { AuthButton } from '@/components/auth-button';
 
 const formSchema = z.object({
   ingredients: z.string().min(10, {
@@ -204,6 +205,7 @@ function HomeComponent() {
                         Favoritos
                     </Button>
                 </Link>
+                <AuthButton />
             </nav>
         </header>
 

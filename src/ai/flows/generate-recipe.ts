@@ -10,7 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { generateImageForRecipe } from './generate-recipe-image';
+import { searchPhoto } from '@/services/pexels';
 
 const GenerateRecipeInputSchema = z.object({
   ingredients: z
@@ -112,7 +112,7 @@ const generateRecipeFlow = ai.defineFlow(
         throw new Error('Could not generate recipe');
     }
 
-    const imageUrl = await generateImageForRecipe(recipeDetails.imageHint || recipeDetails.recipeName);
+    const imageUrl = await searchPhoto(recipeDetails.imageHint || recipeDetails.recipeName);
 
     return {
         ...recipeDetails,

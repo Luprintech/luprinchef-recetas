@@ -6,10 +6,21 @@ import Image from "next/image";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { GenerateRecipeOutput } from "@/ai/flows/generate-recipe";
-import { Clock, Leaf, ListOrdered, HeartPulse, PlusCircle, Utensils, Heart, Search } from "lucide-react";
+import { Clock, Leaf, ListOrdered, HeartPulse, PlusCircle, Utensils, Heart, Search, LogIn } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { useFavorites } from "@/hooks/use-favorites";
 import { Button } from "./ui/button";
+import { useAuth } from "@/hooks/use-auth";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface RecipeCardProps {
     recipe: GenerateRecipeOutput;
@@ -18,14 +29,20 @@ interface RecipeCardProps {
 
 export function RecipeCard({ recipe, onGenerateWithSuggestions }: RecipeCardProps) {
     const { addFavorite, removeFavorite, isFavorite } = useFavorites();
+    const { isAuthenticated, signIn } = useAuth();
     const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
-    
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
     const isFav = isFavorite(recipe.recipeName);
 
     const parseList = (list: string) => list.split(/\n-? ?/).filter(item => item.trim() !== "");
     const parseInstructions = (list: string) => (list || '').split(/\n/).map(item => item.trim().replace(/^\d+\.?\s*/, '')).filter(Boolean);
 
     const handleFavoriteClick = () => {
+        if (!isAuthenticated) {
+            setIsAuthModalOpen(true);
+            return;
+        }
         if (isFav) {
             removeFavorite(recipe.recipeName);
         } else {
@@ -146,5 +163,23 @@ export function RecipeCard({ recipe, onGenerateWithSuggestions }: RecipeCardProp
                 </div>
             </CardFooter>
         </Card>
+
+        <AlertDialog open={isAuthModalOpen} onOpenChange={setIsAuthModalOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Inicia sesión para guardar recetas</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Necesitas una cuenta para guardar tus recetas favoritas y acceder a ellas desde cualquier dispositivo.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction onClick={signIn}>
+                        <LogIn className="mr-2 h-4 w-4" />
+                        Continuar con Google
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     )
 }
