@@ -17,15 +17,15 @@ import type { GenerateRecipeOutput } from '@/ai/flows/generate-recipe';
 interface RecipeModalProps {
     recipe: GenerateRecipeOutput;
     children: React.ReactNode;
-    onGenerateWithSuggestions?: (ingredients: string[]) => void;
+    onGenerateWithSuggestions?: (recipeName: string, ingredients: string[]) => void;
 }
 
 export function RecipeModal({ recipe, children, onGenerateWithSuggestions }: RecipeModalProps) {
     const [isOpen, setIsOpen] = useState(false);
 
-    const handleGenerateWithSuggestions = (ingredients: string[]) => {
+    const handleGenerateWithSuggestions = (recipeName: string, ingredients: string[]) => {
         if (onGenerateWithSuggestions) {
-            onGenerateWithSuggestions(ingredients);
+            onGenerateWithSuggestions(recipeName, ingredients);
             setIsOpen(false);
         }
     }

@@ -33,12 +33,27 @@ function SearchPageComponent() {
         const fetchRecipes = async () => {
             setIsLoading(true);
             setRecipes([]);
+
+            // Check sessionStorage cache to avoid regenerating the same search
+            const cacheKey = `luprinchef_search:${query.toLowerCase().trim()}`;
+            try {
+                const cached = sessionStorage.getItem(cacheKey);
+                if (cached) {
+                    setRecipes(JSON.parse(cached));
+                    setIsLoading(false);
+                    return;
+                }
+            } catch (_) { /* unavailable in SSR or private mode */ }
+
             const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
             const result = await res.json();
             if (result.error) {
                 console.error(result.error);
             } else if (result.recipes) {
                 setRecipes(result.recipes);
+                try {
+                    sessionStorage.setItem(cacheKey, JSON.stringify(result.recipes));
+                } catch (_) { /* quota exceeded */ }
             }
             setIsLoading(false);
         };
@@ -52,9 +67,10 @@ function SearchPageComponent() {
         }
     };
     
-    const handleGenerateWithSuggestions = (ingredients: string[]) => {
+    const handleGenerateWithSuggestions = (recipeName: string, ingredients: string[]) => {
         const params = new URLSearchParams();
-        params.set('ingredients', ingredients.join(', '));
+        const combined = [recipeName, ...ingredients].join(', ');
+        params.set('ingredients', combined);
         router.push(`/recipe?${params.toString()}`);
     };
 

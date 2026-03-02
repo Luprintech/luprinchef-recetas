@@ -51,9 +51,10 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
         );
     }, [recipes, searchTerm]);
 
-    const handleGenerateWithSuggestions = (ingredients: string[]) => {
+    const handleGenerateWithSuggestions = (recipeName: string, ingredients: string[]) => {
         const params = new URLSearchParams();
-        params.set('ingredients', ingredients.join(', '));
+        const combined = [recipeName, ...ingredients].join(', ');
+        params.set('ingredients', combined);
         router.push(`/recipe?${params.toString()}`);
     };
 

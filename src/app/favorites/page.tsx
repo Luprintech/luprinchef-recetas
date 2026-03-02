@@ -36,10 +36,11 @@ export default function FavoritesPage() {
     const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
     const router = useRouter();
 
-    const handleGenerateWithSuggestions = (ingredients: string[]) => {
+    const handleGenerateWithSuggestions = (recipeName: string, ingredients: string[]) => {
         const params = new URLSearchParams();
-        params.set('ingredients', ingredients.join(', '));
-        router.push(`/?${params.toString()}`);
+        const combined = [recipeName, ...ingredients].join(', ');
+        params.set('ingredients', combined);
+        router.push(`/recipe?${params.toString()}`);
     };
 
     const handleCreateFolder = () => {

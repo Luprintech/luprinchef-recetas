@@ -13,6 +13,11 @@ import { Home } from 'lucide-react';
 import type { GenerateRecipeOutput } from '@/ai/flows/generate-recipe';
 import { ThemeToggle } from '@/components/theme-toggle';
 
+// Build a stable cache key from recipe params
+function buildCacheKey(ingredients: string, vegetarian: boolean, glutenFree: boolean, airFryer: boolean, cuisine: string) {
+    return `luprinchef_recipe:${JSON.stringify({ ingredients: ingredients.trim().toLowerCase(), vegetarian, glutenFree, airFryer, cuisine })}`;
+}
+
 function RecipePageComponent() {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -23,7 +28,6 @@ function RecipePageComponent() {
     useEffect(() => {
         const ingredients = searchParams.get('ingredients');
 
-        // Redirect if ingredients param is not present or is empty.
         if (!ingredients) {
             router.push('/');
             return;
@@ -38,6 +42,18 @@ function RecipePageComponent() {
             setIsLoading(true);
             setRecipe(null);
             setError(null);
+
+            // Check sessionStorage cache first — avoids calling Gemini again for same params
+            const cacheKey = buildCacheKey(ingredients, vegetarian, glutenFree, airFryer, cuisine);
+            try {
+                const cached = sessionStorage.getItem(cacheKey);
+                if (cached) {
+                    setRecipe(JSON.parse(cached));
+                    setIsLoading(false);
+                    return;
+                }
+            } catch (_) { /* sessionStorage unavailable (SSR, private mode) */ }
+
             const res = await fetch('/api/recipe/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -48,6 +64,9 @@ function RecipePageComponent() {
                 setError(result.error);
             } else {
                 setRecipe(result.recipe);
+                try {
+                    sessionStorage.setItem(cacheKey, JSON.stringify(result.recipe));
+                } catch (_) { /* quota exceeded or unavailable */ }
             }
             setIsLoading(false);
         };
@@ -55,7 +74,7 @@ function RecipePageComponent() {
         fetchRecipe();
     }, [searchParams, router]);
 
-    const handleGenerateWithSuggestions = (additionalIngredients: string[]) => {
+    const handleGenerateWithSuggestions = (recipeName: string, additionalIngredients: string[]) => {
         const ingredients = searchParams.get('ingredients');
         if (!ingredients) {
             router.push('/');
@@ -64,13 +83,13 @@ function RecipePageComponent() {
 
         const originalIngredients = ingredients.split(',').map(i => i.trim()).filter(Boolean);
         const newIngredients = [...new Set([...originalIngredients, ...additionalIngredients])];
-        
+
         const params = new URLSearchParams(searchParams.toString());
         params.set('ingredients', newIngredients.join(', '));
 
         router.push(`/recipe?${params.toString()}`);
     };
-    
+
     return (
         <div className="flex flex-col items-center min-h-screen p-4 md:p-8">
             <main className="w-full max-w-2xl">

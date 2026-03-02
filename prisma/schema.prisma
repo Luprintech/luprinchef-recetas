@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Recipe {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  /// Ingredientes en minúsculas separados por coma para búsqueda LIKE
+  ingredients String
+  instructions String
+  image       String?
+  cuisine     String?
+  /// Tags de dieta separados por coma: "vegetarian", "gluten-free", "air-fryer"
+  diet        String   @default("")
+  createdByAI Boolean  @default(false)
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  /// JSON completo de GenerateRecipeOutput para renderizar RecipeCard sin re-parsear
+  recipeData  String
+
+  @@index([title])
+  @@index([cuisine])
+  @@index([createdAt])
+  @@index([views])
+}

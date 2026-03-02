@@ -6,7 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { ChefHat, Sparkles, BookHeart, Wind, Camera, Search } from 'lucide-react';
+import { ChefHat, Sparkles, BookHeart, BookOpen, Wind, Camera, Search } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -68,23 +68,37 @@ function HomeComponent() {
   
     useEffect(() => {
         const fetchSuggestions = async () => {
-            if (searchTerm.trim().length < 2) {
+            const q = searchTerm.trim();
+            if (q.length < 3) {
                 setSuggestions([]);
                 return;
             }
 
+            // Check sessionStorage cache before calling Gemini
+            const cacheKey = `luprinchef_suggestions:${q.toLowerCase()}`;
+            try {
+                const cached = sessionStorage.getItem(cacheKey);
+                if (cached) {
+                    setSuggestions(JSON.parse(cached));
+                    return;
+                }
+            } catch (_) { /* unavailable */ }
+
             setIsSuggesting(true);
-            const res = await fetch(`/api/search/suggestions?q=${encodeURIComponent(searchTerm)}`);
+            const res = await fetch(`/api/search/suggestions?q=${encodeURIComponent(q)}`);
             const data = await res.json();
             if (data.suggestions) {
                 setSuggestions(data.suggestions);
+                try {
+                    sessionStorage.setItem(cacheKey, JSON.stringify(data.suggestions));
+                } catch (_) { /* quota exceeded */ }
             }
             setIsSuggesting(false);
         };
 
         const handler = setTimeout(() => {
             fetchSuggestions();
-        }, 500);
+        }, 1200);
 
         return () => {
             clearTimeout(handler);
@@ -199,6 +213,12 @@ function HomeComponent() {
             </h1>
             <nav className="flex items-center gap-2">
                 <ThemeToggle />
+                <Link href="/recipes" passHref>
+                    <Button variant="ghost">
+                        <BookOpen className="mr-2" />
+                        Catálogo
+                    </Button>
+                </Link>
                 <Link href="/favorites" passHref>
                     <Button variant="ghost">
                         <BookHeart className="mr-2" />

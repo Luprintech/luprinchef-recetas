@@ -24,7 +24,7 @@ import {
 
 interface RecipeCardProps {
     recipe: GenerateRecipeOutput;
-    onGenerateWithSuggestions?: (ingredients: string[]) => void;
+    onGenerateWithSuggestions?: (recipeName: string, ingredients: string[]) => void;
 }
 
 export function RecipeCard({ recipe, onGenerateWithSuggestions }: RecipeCardProps) {
@@ -35,7 +35,12 @@ export function RecipeCard({ recipe, onGenerateWithSuggestions }: RecipeCardProp
 
     const isFav = isFavorite(recipe.recipeName);
 
-    const parseList = (list: string) => list.split(/\n-? ?/).filter(item => item.trim() !== "");
+    const parseList = (list: string) => {
+        if (list.includes('\n')) {
+            return list.split('\n').map(s => s.replace(/^-\s*/, '').trim()).filter(Boolean);
+        }
+        return list.split(/;\s*/).filter(item => item.trim() !== '');
+    };
     const parseInstructions = (list: string) => (list || '').split(/\n/).map(item => item.trim().replace(/^\d+\.?\s*/, '')).filter(Boolean);
 
     const handleFavoriteClick = () => {
@@ -61,11 +66,12 @@ export function RecipeCard({ recipe, onGenerateWithSuggestions }: RecipeCardProp
 
     const handleSearchWithSelected = () => {
         if (onGenerateWithSuggestions && selectedIngredients.length > 0) {
-            onGenerateWithSuggestions(selectedIngredients);
+            onGenerateWithSuggestions(recipe.recipeName, selectedIngredients);
         }
     };
     
     return (
+        <>
         <Card className="animate-in fade-in-50 duration-500 overflow-hidden">
             <div className="relative w-full aspect-video">
                 <Image
@@ -107,7 +113,7 @@ export function RecipeCard({ recipe, onGenerateWithSuggestions }: RecipeCardProp
                     <h3 className="text-lg font-semibold mb-3 flex items-center gap-2"><Leaf className="h-5 w-5 text-primary"/> Ingredientes</h3>
                     <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                         {parseList(recipe.ingredientsList).map((item, index) => (
-                            <li key={index}>{item}</li>
+                            <li key={index} className="text-justify">{item}</li>
                         ))}
                     </ul>
                 </div>
@@ -116,14 +122,14 @@ export function RecipeCard({ recipe, onGenerateWithSuggestions }: RecipeCardProp
                     <h3 className="text-lg font-semibold mb-3 flex items-center gap-2"><ListOrdered className="h-5 w-5 text-primary"/> Instrucciones</h3>
                     <ol className="list-decimal list-inside space-y-3">
                         {parseInstructions(recipe.instructions).map((item, index) => (
-                            <li key={index}>{item}</li>
+                            <li key={index} className="text-justify">{item}</li>
                         ))}
                     </ol>
                 </div>
                 <Separator />
                 <div>
                     <h3 className="text-lg font-semibold mb-3 flex items-center gap-2"><HeartPulse className="h-5 w-5 text-primary"/> Información Nutricional</h3>
-                     <p className="text-muted-foreground">{recipe.nutritionalInformation}</p>
+                     <p className="text-muted-foreground text-justify">{recipe.nutritionalInformation}</p>
                 </div>
             </CardContent>
             <CardFooter>
@@ -181,5 +187,6 @@ export function RecipeCard({ recipe, onGenerateWithSuggestions }: RecipeCardProp
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
+        </>
     )
 }

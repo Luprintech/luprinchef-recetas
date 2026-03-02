@@ -37,7 +37,7 @@ const GenerateRecipeOutputSchema = z.object({
   ingredientsList: z
     .string()
     .describe(
-      'A list of ingredients required for the recipe, including quantities.'
+      'A list of ingredients required for the recipe, including quantities. Format: each ingredient on its own line starting with "- ", e.g. "- 2 huevos\n- 1 cebolla\n- 200g harina"'
     ),
   instructions: z.string().describe('Step-by-step instructions for the recipe.'),
   estimatedCookingTime: z
@@ -54,7 +54,7 @@ const GenerateRecipeOutputSchema = z.object({
   imageHint: z
     .string()
     .describe(
-      'A short, 2-word hint in English for generating an image of the recipe (e.g., "chicken curry").'
+      'A specific 1-2 word English description to find a realistic food photo on Pexels. Focus ONLY on the main ingredient to ensure high quality and faithful results. Do not include sauces, adjectives or complex preparations. E.g.: for "merluza con salsa verde" use "hake fish", for "pollo al ajillo" use "cooked chicken", for "tortilla" use "omelette".'
     ),
   imageUrl: z.string().describe('A URL for an image of the recipe.'),
 });
@@ -97,7 +97,12 @@ La receta DEBE ser sin gluten. No incluyas ingredientes que contengan gluten com
 La receta DEBE ser para una freidora de aire (air fryer).
 {{/if}}
 
-La salida debe ser en formato JSON. El JSON debe incluir las claves recipeName, ingredientsList, instructions, estimatedCookingTime, additionalSuggestedIngredients, nutritionalInformation y imageHint. Todo el texto en los valores del JSON debe estar en español.`,
+La salida debe ser en formato JSON. El JSON debe incluir las claves recipeName, ingredientsList, instructions, estimatedCookingTime, additionalSuggestedIngredients, nutritionalInformation y imageHint. Todo el texto en los valores del JSON debe estar en español.
+
+IMPORTANTE sobre el formato:
+- El campo ingredientsList DEBE tener cada ingrediente en una línea separada comenzando con "- ", ejemplo: "- 4 patatas medianas\\n- 6 huevos\\n- 1 cebolla"
+- El campo instructions DEBE tener cada paso numerado en una línea separada, ejemplo: "1. Pelar las patatas.\\n2. Batir los huevos."
+- El campo imageHint DEBE ser en inglés, de 1-2 palabras, centrándose solo en el ingrediente principal (por ejemplo: "cooked chicken" para pollo al ajillo) para buscar fotos realistas y fieles en Pexels.`,
 });
 
 const generateRecipeFlow = ai.defineFlow(

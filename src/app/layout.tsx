@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import '@/app/globals.css';
+import Link from 'next/link';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 import { SessionProvider } from 'next-auth/react';
+import { CookieConsent } from '@/components/cookie-consent';
 
 export const metadata: Metadata = {
     title: 'Cocina con Luprinchef',
@@ -30,9 +32,24 @@ export default function RootLayout({
                     >
                         {children}
                         <Toaster />
-                        <footer className="text-center p-4 border-t text-sm text-muted-foreground mt-8">
-                            Powered by Guadalupe Cano
+
+                        {/* Footer */}
+                        <footer className="border-t mt-12 py-6 px-4">
+                            <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
+                                <span>© {new Date().getFullYear()} Cocina con Luprinchef · Powered by Guadalupe Cano</span>
+                                <nav className="flex items-center gap-4">
+                                    <Link href="/privacidad" className="hover:text-foreground transition-colors">
+                                        Política de Privacidad
+                                    </Link>
+                                    <span>·</span>
+                                    <Link href="/cookies" className="hover:text-foreground transition-colors">
+                                        Política de Cookies
+                                    </Link>
+                                </nav>
+                            </div>
                         </footer>
+
+                        <CookieConsent />
                     </ThemeProvider>
                 </SessionProvider>
             </body>
