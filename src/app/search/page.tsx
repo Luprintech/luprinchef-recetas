@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Home, Search as SearchIcon } from 'lucide-react';
 import { FavoriteRecipeCard } from '@/components/favorite-recipe-card';
 import { RecipeSkeleton } from '@/components/recipe-skeleton';
-import { searchRecipesByQuery } from '@/app/actions';
 import type { GenerateRecipeOutput } from '@/ai/flows/generate-recipe';
 import { Card } from '@/components/ui/card';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -34,7 +33,8 @@ function SearchPageComponent() {
         const fetchRecipes = async () => {
             setIsLoading(true);
             setRecipes([]);
-            const result = await searchRecipesByQuery(query);
+            const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+            const result = await res.json();
             if (result.error) {
                 console.error(result.error);
             } else if (result.recipes) {

@@ -18,7 +18,6 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import { identifyIngredientsFromImage, getSearchSuggestions } from '@/app/actions';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ThemeToggle } from '@/components/theme-toggle';
 
@@ -74,9 +73,10 @@ function HomeComponent() {
             }
 
             setIsSuggesting(true);
-            const result = await getSearchSuggestions(searchTerm);
-            if (result.suggestions) {
-                setSuggestions(result.suggestions);
+            const res = await fetch(`/api/search/suggestions?q=${encodeURIComponent(searchTerm)}`);
+            const data = await res.json();
+            if (data.suggestions) {
+                setSuggestions(data.suggestions);
             }
             setIsSuggesting(false);
         };
@@ -156,7 +156,12 @@ function HomeComponent() {
       const imageDataUri = canvas.toDataURL('image/jpeg');
 
       try {
-        const result = await identifyIngredientsFromImage(imageDataUri);
+        const res = await fetch('/api/ingredients/identify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageDataUri }),
+        });
+        const result = await res.json();
         if (result.error) {
           toast({ variant: "destructive", title: "Error al analizar", description: result.error });
         } else if (result.ingredients) {

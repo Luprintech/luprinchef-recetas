@@ -3,7 +3,6 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { createRecipe } from '@/app/actions';
 import { RecipeCard } from '@/components/recipe-card';
 import { RecipeSkeleton } from '@/components/recipe-skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -39,7 +38,12 @@ function RecipePageComponent() {
             setIsLoading(true);
             setRecipe(null);
             setError(null);
-            const result = await createRecipe(ingredients, vegetarian, glutenFree, airFryer, cuisine);
+            const res = await fetch('/api/recipe/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ingredients, vegetarian, glutenFree, airFryer, cuisine }),
+            });
+            const result = await res.json();
             if (result.error) {
                 setError(result.error);
             } else {

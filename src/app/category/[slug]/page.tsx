@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Home, Search } from 'lucide-react';
 import { FavoriteRecipeCard } from '@/components/favorite-recipe-card';
 import { RecipeSkeleton } from '@/components/recipe-skeleton';
-import { createRecipesByCategory } from '@/app/actions';
 import type { GenerateRecipeOutput } from '@/ai/flows/generate-recipe';
 import { Card } from '@/components/ui/card';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -34,7 +33,8 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
         const fetchRecipes = async () => {
             setIsLoading(true);
             setRecipes([]);
-            const result = await createRecipesByCategory(categoryName);
+            const res = await fetch(`/api/categories?name=${encodeURIComponent(categoryName)}`);
+            const result = await res.json();
             if (result.error) {
                 console.error(result.error);
             } else if (result.recipes) {

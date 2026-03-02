@@ -6,7 +6,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { GenerateRecipeOutput } from "@/ai/flows/generate-recipe";
 import { RecipeModal } from './recipe-modal';
 import { useFavorites } from '@/hooks/use-favorites';
-import { generateRecipeImage } from '@/app/actions';
 import { Image as ImageIcon } from 'lucide-react';
 
 interface FavoriteRecipeCardProps {
@@ -26,7 +25,12 @@ export function FavoriteRecipeCard({ recipe, children, onGenerateWithSuggestions
         if (isPlaceholder && recipe.imageHint && !imageGenAttempted.current) {
             imageGenAttempted.current = true;
             setIsLoadingImage(true);
-            generateRecipeImage(recipe.imageHint)
+            fetch('/api/recipe/image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ imageHint: recipe.imageHint }),
+            })
+                .then(res => res.json())
                 .then(result => {
                     if (result.imageUrl && !result.error) {
                         setCurrentImageUrl(result.imageUrl);
