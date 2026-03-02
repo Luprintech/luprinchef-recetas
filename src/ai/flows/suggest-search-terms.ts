@@ -27,7 +27,7 @@ export type SuggestSearchTermsOutput = z.infer<typeof SuggestSearchTermsOutputSc
 
 const prompt = ai.definePrompt({
   name: 'suggestSearchTermsPrompt',
-  model: 'googleai/gemini-1.5-flash-latest',
+  model: 'googleai/gemini-2.0-flash',
   input: {schema: SuggestSearchTermsInputSchema},
   output: {schema: SuggestSearchTermsOutputSchema},
   prompt: `Eres un asistente útil para una aplicación de recetas. Basado en la consulta de búsqueda parcial del usuario, proporciona 5 sugerencias de búsqueda relevantes. Las sugerencias pueden ser nombres de recetas o ingredientes. La consulta está en español. Proporciona las sugerencias en español.
