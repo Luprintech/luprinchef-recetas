@@ -35,7 +35,7 @@ export async function identifyIngredients(
 
 const prompt = ai.definePrompt({
   name: 'identifyIngredientsPrompt',
-  model: 'googleai/gemini-2.0-flash',
+  model: 'googleai/gemini-2.5-flash',
   input: {schema: IdentifyIngredientsInputSchema},
   output: {schema: IdentifyIngredientsOutputSchema},
   prompt: `Eres un experto identificando comida. Analiza la siguiente imagen de un frigorífico y lista todos los ingredientes que veas. Devuelve el resultado como una lista separada por comas en español. Prioriza ingredientes comunes. Por ejemplo: 'huevos, leche, queso, tomates, cebolla'.

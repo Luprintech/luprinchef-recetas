@@ -36,7 +36,7 @@ const generateImageFlow = ai.defineFlow(
 
     try {
       const { media } = await ai.generate({
-        model: 'googleai/gemini-2.0-flash-preview-image-generation',
+        model: 'googleai/gemini-2.5-flash-preview-image-generation',
         prompt: `a delicious professional photo of ${imageHint}, spanish cuisine style`,
         config: {
           responseModalities: ['TEXT', 'IMAGE'],
