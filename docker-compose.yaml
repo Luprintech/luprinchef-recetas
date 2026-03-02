@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  luprinchef:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: luprinchef_app
+    ports:
+      - "3000:3000"
+    volumes:
+      # Montamos la carpeta data para que la base de datos (SQLite) 
+      # y el caché de Pexels sean persistentes entre reinicios
+      - ./data:/app/data
+    env_file:
+      - .env
+    restart: unless-stopped
