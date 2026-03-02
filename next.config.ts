@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // 👇 Tu configuración actual, conservada
+  // Tu configuración actual, conservada
   typescript: {
     ignoreBuildErrors: true,
   },
